@@ -165,8 +165,11 @@ public final class TutoShowcase {
     private static class ViewActionsSettings {
         private boolean animated = true;
         private boolean withBorder = false;
+        private boolean touchable = false;
         @Nullable
         private View.OnClickListener onClickListener;
+        @Nullable
+        private View.OnTouchListener onTouchListener;
 
         private Integer delay = 0;
         private Integer duration = 300;
@@ -371,7 +374,8 @@ public final class TutoShowcase {
             RoundRect roundRect = new RoundRect(x, y, width, height);
             roundRect.setDisplayBorder(settings.withBorder);
             tutoShowcase.tutoView.addRoundRect(roundRect);
-            addClickableView(rect, settings.onClickListener, additionalRadiusRatio);
+            if(settings.touchable) addClickableView(rect, settings.onTouchListener, additionalRadiusRatio);
+            else addClickableView(rect, settings.onClickListener, additionalRadiusRatio);
             tutoShowcase.tutoView.postInvalidate();
         }
 
@@ -396,6 +400,20 @@ public final class TutoShowcase {
             ViewCompat.setTranslationY(cliclableView, y);
             ViewCompat.setTranslationX(cliclableView, x);
             cliclableView.setOnClickListener(onClickListener);
+            tutoShowcase.container.addView(cliclableView);
+            tutoShowcase.container.invalidate();
+        }
+
+        private void addClickableView(Rect rect, View.OnTouchListener onTouchListener, float additionalRadiusRatio) {
+            View cliclableView = new View(this.view.getContext());
+            int width = (int) (rect.width() * additionalRadiusRatio);
+            int height = (int) (rect.height() * additionalRadiusRatio);
+            int x = rect.left - (width - rect.width()) / 2;
+            int y = rect.top - (height - rect.height()) / 2 - getStatusBarHeight();
+            cliclableView.setLayoutParams(new ViewGroup.MarginLayoutParams(width, height));
+            ViewCompat.setTranslationY(cliclableView, y);
+            ViewCompat.setTranslationX(cliclableView, x);
+            cliclableView.setOnTouchListener(onTouchListener);
             tutoShowcase.container.addView(cliclableView);
             tutoShowcase.container.invalidate();
         }
@@ -449,6 +467,12 @@ public final class TutoShowcase {
 
         public ShapeViewActionsEditor onClick(View.OnClickListener onClickListener) {
             this.viewActions.settings.onClickListener = onClickListener;
+            return this;
+        }
+
+        public ShapeViewActionsEditor onTouch(View.OnTouchListener onTouchListener){
+            this.viewActions.settings.touchable = true;
+            this.viewActions.settings.onTouchListener = onTouchListener;
             return this;
         }
     }

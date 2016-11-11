@@ -2,7 +2,6 @@ package com.github.florent37.tutoshowcase.shapes;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import android.graphics.Path;
 import android.graphics.RectF;
 
 public class RoundRect extends Shape {
@@ -46,8 +45,8 @@ public class RoundRect extends Shape {
     }
 
     private static void drawRoundedRect(Canvas canvas, float left, float top, float right, float bottom, Paint paint) {
-        float radius = (bottom - top) / 2;
-
+//        float radius = (bottom - top) / 2;
+        float radius = 0;
         RectF rectF = new RectF(left, top, right, bottom);
         canvas.drawRoundRect(rectF, radius, radius, paint);
     }
